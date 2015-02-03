@@ -1,0 +1,16 @@
+{
+  "name": "zivtech-drush",
+  "version": "0.0.1",
+  "author": "tizzo",
+  "summary": "A module for installing drush from version cotnrol and managing configuration.",
+  "license": "Apache 2.0",
+  "source": "https://github.com/zivtech/puppet-drush.git",
+  "project_page": "https://github.com/zivtech/puppet-drush",
+  "issues_url": "https://github.com/zivtech/puppet-drush/issues",
+  "dependencies": [
+    {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"},
+    {"name":"nodes-php","version_requirement":">= 0.8.0"},
+    {"name":"puppetlabs-vcsrepo"}
+  ]
+}
+
