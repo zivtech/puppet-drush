@@ -2,7 +2,7 @@
   "name": "zivtech-drush",
   "version": "0.0.1",
   "author": "tizzo",
-  "summary": "A module for installing drush from version cotnrol and managing configuration.",
+  "summary": "A module for installing drush from version control and managing its configuration.",
   "license": "Apache 2.0",
   "source": "https://github.com/zivtech/puppet-drush.git",
   "project_page": "https://github.com/zivtech/puppet-drush",
