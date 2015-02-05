@@ -1,13 +1,16 @@
 class drush (
-  // By default, use the current HEAD of the recommended branch.
+  # By default, use the current HEAD of the recommended branch.
   $git_ref = "6.x"
 ){
+
+  ensure_resource('package', 'git')
 
   vcsrepo { "/var/lib/drush":
     ensure => present,
     provider => git,
     source => 'https://github.com/drush-ops/drush.git',
     revision => $git_ref,
+    require  => Package['git'],
   }
 
   file { "/usr/local/bin/drush":
@@ -54,9 +57,15 @@ class drush (
     mode => 755,
   }
 
+  include php
+  include php::apt
+  include php::params
+  include php::pear
+
   package { 'Console_Table':
     ensure   => installed,
     provider => pear,
+    require  => Class['php::pear'],
   }
 
 }
