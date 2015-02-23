@@ -1,6 +1,6 @@
 {
   "name": "zivtech-drush",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "tizzo",
   "summary": "A module for installing drush from version control and managing its configuration.",
   "license": "Apache 2.0",
