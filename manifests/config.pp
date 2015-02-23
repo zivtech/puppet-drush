@@ -8,6 +8,8 @@ define drush::config (
   $value
 ) {
 
+  require drush
+
   if (!$file) {
     $file_name = $name
   }
