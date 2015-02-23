@@ -58,8 +58,7 @@ class drush (
   }
 
   include php
-  include php::apt
-  include php::params
+  include php::cli
   include php::pear
 
   package { 'Console_Table':
