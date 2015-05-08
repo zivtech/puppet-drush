@@ -1,6 +1,7 @@
 class drush (
   # By default, use the current HEAD of the recommended branch.
-  $git_ref = "6.x"
+  $git_ref = "6.x",
+  $configs = {}
 ){
 
   ensure_resource('package', 'git')
@@ -29,7 +30,7 @@ class drush (
     mode => 755,
   }->
 
-  file { "/etc/drush/drushrc.php":
+  file { '/etc/drush/drushrc.php':
     source => 'puppet:///modules/drush/drushrc.php',
     owner => root,
     group => root,
@@ -56,6 +57,27 @@ class drush (
     group => root,
     mode => 755,
   }
+
+
+  require php::composer
+
+  # Newer versions of drush require dependencies
+  exec { 'drush-composer-install':
+    command     => "/usr/bin/php /usr/local/bin/composer install --no-dev",
+    cwd         => "/var/lib/drush",
+    creates     => "/var/lib/drush/vendor",
+    environment => "HOME=/root/",
+    require     => [
+      Class['php::cli'],
+      Class['php::composer'],
+      Vcsrepo['/var/lib/drush'],
+    ],
+    subscribe   => Vcsrepo["/var/lib/drush"],
+  }
+
+
+
+  create_resources(drush::config, $configs)
 
   include php
   include php::cli

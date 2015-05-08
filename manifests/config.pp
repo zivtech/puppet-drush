@@ -8,8 +8,6 @@ define drush::config (
   $value
 ) {
 
-  require drush
-
   if (!$file) {
     $file_name = $name
   }
@@ -33,9 +31,13 @@ define drush::config (
 
   $target_file = "${drush_conf_dir}/${file_name}.php"
 
-  ensure_resource('concat', $target_file, { ensure => $ensure })
+  $concat_resource_options = {
+    ensure  => $ensure,
+    require => File['/etc/drush/drushrc.php'],
+  }
+  ensure_resource('concat', $target_file, $concat_resource_options)
 
-  ensure_resource('concat::fragment', "drush-config-${file}-php-tag", { 
+  ensure_resource('concat::fragment', "drush-config-${file_name}-php-tag", {
     ensure  => $ensure,
     content => "<?php\n",
     target  => $target_file,
