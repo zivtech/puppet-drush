@@ -1,8 +1,8 @@
 class drush (
   # By default, use the current HEAD of the recommended branch.
-  $git_ref = '6.x',
-  $configs = {},
-  $run_composer_install = true
+  # Currently set to the 8.0.0-rc2 release commit.
+  $git_ref = "5cb73ea2f51cbfb60ddb2e37b94e4260e8c7d1e7",
+  $configs = {}
 ){
 
   ensure_resource('package', 'git')
