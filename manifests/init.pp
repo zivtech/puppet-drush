@@ -1,7 +1,6 @@
 class drush (
   # By default, use the current HEAD of the recommended branch.
-  # Currently set to the 8.0.0-rc2 release commit.
-  $git_ref = "5cb73ea2f51cbfb60ddb2e37b94e4260e8c7d1e7",
+  $git_ref = "6.x",
   $configs = {}
 ){
 
@@ -63,19 +62,17 @@ class drush (
   require php::composer
 
   # Newer versions of drush require dependencies
-  if ($run_composer_install) {
-    exec { 'drush-composer-install':
-      command     => '/usr/bin/php /usr/local/bin/composer install --no-dev',
-      cwd         => '/var/lib/drush',
-      creates     => '/var/lib/drush/vendor',
-      environment => 'HOME=/root/',
-      subscribe   => Vcsrepo['/var/lib/drush'],
-      require     => [
-        Class['php::cli'],
-        Class['php::composer'],
-        Vcsrepo['/var/lib/drush'],
-      ],
-    }
+  exec { 'drush-composer-install':
+    command     => "/usr/bin/php /usr/local/bin/composer install --no-dev",
+    cwd         => "/var/lib/drush",
+    environment => "HOME=/root/",
+    require     => [
+      Class['php::cli'],
+      Class['php::composer'],
+      Vcsrepo['/var/lib/drush'],
+    ],
+    subscribe   => Vcsrepo["/var/lib/drush"],
+    refreshonly => true
   }
 
 
