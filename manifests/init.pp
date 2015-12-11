@@ -1,7 +1,8 @@
 class drush (
   # By default, use the current HEAD of the recommended branch.
   $git_ref = "6.x",
-  $configs = {}
+  $configs = {},
+  $run_composer_install = true
 ){
 
   ensure_resource('package', 'git')
@@ -62,17 +63,19 @@ class drush (
   require php::composer
 
   # Newer versions of drush require dependencies
-  exec { 'drush-composer-install':
-    command     => "/usr/bin/php /usr/local/bin/composer install --no-dev",
-    cwd         => "/var/lib/drush",
-    creates     => "/var/lib/drush/vendor",
-    environment => "HOME=/root/",
-    require     => [
-      Class['php::cli'],
-      Class['php::composer'],
-      Vcsrepo['/var/lib/drush'],
-    ],
-    subscribe   => Vcsrepo["/var/lib/drush"],
+  if ($run_composer_install) {
+    exec { 'drush-composer-install':
+      command     => "/usr/bin/php /usr/local/bin/composer install --no-dev",
+      cwd         => "/var/lib/drush",
+      creates     => "/var/lib/drush/vendor",
+      environment => "HOME=/root/",
+      require     => [
+        Class['php::cli'],
+        Class['php::composer'],
+        Vcsrepo['/var/lib/drush'],
+      ],
+      subscribe   => Vcsrepo["/var/lib/drush"],
+    }
   }
 
 
