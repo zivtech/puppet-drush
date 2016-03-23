@@ -1,6 +1,6 @@
 class drush (
   # By default, use the current HEAD of the recommended branch.
-  $git_ref = "6.x",
+  $git_ref = "8.0.5",
   $configs = {}
 ){
 
