@@ -1,62 +1,62 @@
 class drush (
   # By default, use the current HEAD of the recommended branch.
-  $git_ref = "6.x",
+  $git_ref = '6.x',
   $configs = {},
   $run_composer_install = true
 ){
 
   ensure_resource('package', 'git')
 
-  vcsrepo { "/var/lib/drush":
-    ensure => present,
-    provider => git,
-    source => 'https://github.com/drush-ops/drush.git',
+  vcsrepo { '/var/lib/drush':
+    ensure   => 'present',
+    provider => 'git',
+    source   => 'https://github.com/drush-ops/drush.git',
     revision => $git_ref,
     require  => Package['git'],
   }
 
-  file { "/usr/local/bin/drush":
-    require => [Vcsrepo["/var/lib/drush"]],
-    ensure => link,
-    target => "/var/lib/drush/drush",
-    owner => 'root',
-    group => 'root',
-    mode => 755,
+  file { '/usr/local/bin/drush':
+    require => [Vcsrepo['/var/lib/drush']],
+    ensure  => 'link',
+    target  => '/var/lib/drush/drush',
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0755',
   }
 
-  file { "/etc/drush":
-    ensure => directory,
-    owner => root,
-    group => root,
-    mode => 755,
+  file { '/etc/drush':
+    ensure => 'directory',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
   }->
 
   file { '/etc/drush/drushrc.php':
     source => 'puppet:///modules/drush/drushrc.php',
-    owner => root,
-    group => root,
-    mode => 755,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
   }->
 
-  file { "/etc/drush/conf.d":
-    ensure => directory,
-    owner => root,
-    group => root,
-    mode => 755,
+  file { '/etc/drush/conf.d':
+    ensure => 'directory',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
   }
 
-  file { "/usr/share/drush":
-    ensure => directory,
-    owner => root,
-    group => root,
-    mode => 755,
+  file { '/usr/share/drush':
+    ensure => 'directory',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
   }->
 
-  file {  "/usr/share/drush/commands":
-    ensure => directory,
-    owner => root,
-    group => root,
-    mode => 755,
+  file {  '/usr/share/drush/commands':
+    ensure => 'directory',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
   }
 
 
@@ -65,16 +65,16 @@ class drush (
   # Newer versions of drush require dependencies
   if ($run_composer_install) {
     exec { 'drush-composer-install':
-      command     => "/usr/bin/php /usr/local/bin/composer install --no-dev",
-      cwd         => "/var/lib/drush",
-      creates     => "/var/lib/drush/vendor",
-      environment => "HOME=/root/",
+      command     => '/usr/bin/php /usr/local/bin/composer install --no-dev',
+      cwd         => '/var/lib/drush',
+      creates     => '/var/lib/drush/vendor',
+      environment => 'HOME=/root/',
+      subscribe   => Vcsrepo['/var/lib/drush'],
       require     => [
         Class['php::cli'],
         Class['php::composer'],
         Vcsrepo['/var/lib/drush'],
       ],
-      subscribe   => Vcsrepo["/var/lib/drush"],
     }
   }
 
@@ -87,8 +87,8 @@ class drush (
   include php::pear
 
   package { 'Console_Table':
-    ensure   => installed,
-    provider => pear,
+    ensure   => 'installed',
+    provider => 'pear',
     require  => Class['php::pear'],
   }
 
