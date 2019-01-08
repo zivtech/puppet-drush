@@ -38,7 +38,6 @@ define drush::config (
   ensure_resource('concat', $target_file, $concat_resource_options)
 
   ensure_resource('concat::fragment', "drush-config-${file_name}-php-tag", {
-    ensure  => $ensure,
     content => "<?php\n",
     target  => $target_file,
     order   => '00',
