@@ -1,6 +1,6 @@
 class drush (
   # By default, use the current HEAD of the recommended branch.
-  $git_ref = '6.x',
+  $git_ref = '8.x',
   $configs = {},
   $run_composer_install = true
 ){
@@ -59,7 +59,6 @@ class drush (
     mode   => '0755',
   }
 
-
   require php::composer
 
   # Newer versions of drush require dependencies
@@ -78,18 +77,6 @@ class drush (
     }
   }
 
-
-
   create_resources(drush::config, $configs)
-
-  include php
-  include php::cli
-  include php::pear
-
-  package { 'Console_Table':
-    ensure   => 'installed',
-    provider => 'pear',
-    require  => Class['php::pear'],
-  }
 
 }
