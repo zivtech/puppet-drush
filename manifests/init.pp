@@ -9,16 +9,19 @@ class drush (
     source => 'https://github.com/drush-ops/drush-launcher/releases/download/${launcher_git_tag}/drush.phar',
     user   => 'root',
     group  => 'root',
-    mode   => '0775',
-  }
-
+  }->
+  file { '/usr/local/bin/drush':
+    mode   => '0755',
+  }->
   archive { '/usr/local/bin/drush8':
     ensure => present,
     source => 'https://github.com/drush-ops/drush/releases/download/${drush_git_tag}/drush.phar',
     user   => 'root',
     group  => 'root',
-    mode   => '0775',
-  }
+  }->
+  file { '/usr/local/bin/drush8':
+    mode   => '0755',
+  }->
 
   file_line { 'drush_fallback_env':
     ensure  => present,
