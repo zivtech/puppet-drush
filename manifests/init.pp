@@ -1,27 +1,50 @@
 class drush (
-  # By default, use the current HEAD of the recommended branch.
-  $git_ref = '6.x',
-  $configs = {},
-  $run_composer_install = true
+  $drush_git_tag = '8.4.6',
+  $launcher_git_tag = '0.9.0',
+  $configs = {}
 ){
 
-  ensure_resource('package', 'git')
 
-  vcsrepo { '/var/lib/drush':
-    ensure   => 'present',
-    provider => 'git',
-    source   => 'https://github.com/drush-ops/drush.git',
-    revision => $git_ref,
-    require  => Package['git'],
+  wget::fetch { 'Download Drush Launcher':
+    source      => 'https://github.com/drush-ops/drush-launcher/releases/download/${launcher_git_tag}/drush.phar',
+    destination => '/tmp/drush-launcher.phar',
+    timeout     => 0,
+    verbose     => false,
   }
 
   file { '/usr/local/bin/drush':
-    require => [Vcsrepo['/var/lib/drush']],
-    ensure  => 'link',
-    target  => '/var/lib/drush/drush',
+    source => '/tmp/drush-launcher.phar',
     owner   => 'root',
     group   => 'root',
     mode    => '0755',
+  }
+
+  file { '/tmp/drush-launcher.phar':
+    ensure => absent,
+  }
+
+  wget::fetch { 'Download Drush 8':
+    source      => 'https://github.com/drush-ops/drush/releases/download/${drush_git_tag}/drush.phar',
+    destination => '/tmp/drush8.phar',
+    timeout     => 0,
+    verbose     => false,
+  }
+
+  file { '/usr/local/bin/drush8':
+    source => '/tmp/drush8.phar',
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0755',
+  }
+
+  file { '/tmp/drush8.phar':
+    ensure => absent,
+  }
+
+  file_line { 'drush_fallback_env':
+    ensure  => present,
+    line    => 'DRUSH_LAUNCHER_FALLBACK=//drush',
+    path    => '/etc/environment',
   }
 
   file { '/etc/drush':
@@ -58,27 +81,6 @@ class drush (
     group  => 'root',
     mode   => '0755',
   }
-
-
-  require php::composer
-
-  # Newer versions of drush require dependencies
-  if ($run_composer_install) {
-    exec { 'drush-composer-install':
-      command     => '/usr/bin/php /usr/local/bin/composer install --no-dev',
-      cwd         => '/var/lib/drush',
-      creates     => '/var/lib/drush/vendor',
-      environment => 'HOME=/root/',
-      subscribe   => Vcsrepo['/var/lib/drush'],
-      require     => [
-        Class['php::cli'],
-        Class['php::composer'],
-        Vcsrepo['/var/lib/drush'],
-      ],
-    }
-  }
-
-
 
   create_resources(drush::config, $configs)
 
