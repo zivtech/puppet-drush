@@ -6,7 +6,7 @@ class drush (
 
   archive { '/usr/local/bin/drush':
     ensure => present,
-    source => 'https://github.com/drush-ops/drush-launcher/releases/download/${launcher_git_tag}/drush.phar',
+    source => "https://github.com/drush-ops/drush-launcher/releases/download/${launcher_git_tag}/drush.phar",
     user   => 'root',
     group  => 'root',
   }->
@@ -15,7 +15,7 @@ class drush (
   }->
   archive { '/usr/local/bin/drush8':
     ensure => present,
-    source => 'https://github.com/drush-ops/drush/releases/download/${drush_git_tag}/drush.phar',
+    source => "https://github.com/drush-ops/drush/releases/download/${drush_git_tag}/drush.phar",
     user   => 'root',
     group  => 'root',
   }->
